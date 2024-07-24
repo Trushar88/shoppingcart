@@ -80,9 +80,14 @@ class _ProductScreenState extends State<FavScreen> {
                       Positioned(
                           right: 10,
                           top: 10,
-                          child: Icon(
-                            Icons.favorite,
-                            color: APPCOLOR.RED,
+                          child: InkWell(
+                            onTap: () {
+                              removeFav(index);
+                            },
+                            child: Icon(
+                              Icons.favorite,
+                              color: APPCOLOR.RED,
+                            ),
                           )),
                     ],
                   );
@@ -93,5 +98,10 @@ class _ProductScreenState extends State<FavScreen> {
   @override
   void initState() {
     super.initState();
+  }
+
+  removeFav(index) {
+    favProductsList.removeAt(index);
+    setState(() {});
   }
 }

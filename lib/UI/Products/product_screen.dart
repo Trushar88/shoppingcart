@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:shoppingcart/Models/product_model.dart';
+import 'package:shoppingcart/UI/Favorite/fav_screen.dart';
 import 'package:shoppingcart/UI/Products/product_repository.dart';
 import 'package:shoppingcart/app/Base/base_class.dart';
 import 'package:shoppingcart/app/Network/base_response.dart';
@@ -32,20 +33,13 @@ class _ProductScreenState extends State<ProductScreen> {
         appBar: AppBar(
           centerTitle: true,
           title: const Text(AppString.product),
-          actions: const [
-            Badge(
-              largeSize: 15,
-              smallSize: 15,
-              label: Text("1"),
-              child: Icon(Icons.favorite),
-            ),
-            Badge(
-                largeSize: 15,
-                smallSize: 15,
-                label: Text("1"),
-                child: Icon(
-                  Icons.shopping_bag,
-                )),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => FavScreen()));
+                },
+                icon: const Icon(Icons.favorite)),
+            IconButton(onPressed: () {}, icon: const Icon(Icons.shopping_bag)),
           ],
         ),
         body: _productsList.isNotEmpty
