@@ -1,0 +1,39 @@
+name: shoppingcart
+description: "A new Flutter project."
+
+publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+
+version: 1.0.0+1
+
+environment:
+  sdk: '>=3.4.4 <4.0.0'
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.6
+  dio: ^5.5.0+1
+  loader_overlay: ^4.0.1
+  lottie: ^3.1.2
+  shared_preferences: ^2.2.3
+  cached_network_image: ^3.3.1
+  connectivity_plus: ^6.0.3
+  another_flushbar: ^1.12.30
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^3.0.0
+
+flutter:
+
+
+  uses-material-design: true
+
+  # To add assets to your application, add an assets section, like this:
+  assets:
+    - assets/images/
+    - assets/lottie/
+
