@@ -5,4 +5,5 @@ const String appName = "shoppingcart"; //AppName
 const String appVerison = "0.0.1"; // AppVersion
 
 SharedPreferences? sharedPreferences;
-List<ProductModel> favProductsList = [];
+List<ProductModel> productsList = [];
+List<ProductModel> cartProductsList = [];

@@ -25,74 +25,108 @@ class _ProductScreenState extends State<FavScreen> {
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: const Text(AppString.product),
+          title: const Text(AppString.favourite),
         ),
-        body: favProductsList.isNotEmpty
-            ? GridView.builder(
-                itemCount: favProductsList.length,
-                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, mainAxisSpacing: 10, crossAxisSpacing: 10),
-                itemBuilder: (context, index) {
-                  return Stack(
-                    children: [
-                      Container(
+        body: (productsList.isNotEmpty && productsList.where((e) => e.isFavorite == true).isNotEmpty)
+            ? Padding(
+                padding: const EdgeInsets.all(15),
+                child: GridView.builder(
+                    itemCount: productsList.where((e) => e.isFavorite == true).length,
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2, mainAxisSpacing: 10, crossAxisSpacing: 10, childAspectRatio: 1 / 1.5),
+                    itemBuilder: (context, index) {
+                      return Container(
                         decoration: BoxDecoration(border: Border.all(color: APPCOLOR.GREYCOLOR), borderRadius: BorderRadius.circular(15)),
                         child: Padding(
                           padding: const EdgeInsets.all(10),
                           child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Expanded(
-                                child: AppNetworkImage(
-                                  imageUrl: favProductsList[index].image ?? "",
-                                  backGroundColor: APPCOLOR.GREYBG,
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                      child: AppNetworkImage(
+                                        imageUrl: productsList.where((e) => e.isFavorite == true).toList()[index].image ?? "",
+                                        backGroundColor: APPCOLOR.GREYBG,
+                                        // height: 100,
+                                      ),
+                                    ),
+                                    const SizedBox(
+                                      width: 10,
+                                    ),
+                                    Text(
+                                      "\$ ${productsList.where((e) => e.isFavorite == true).toList()[index].price}",
+                                      style: const TextStyle(color: Colors.black, fontWeight: FontWeight.w700, fontSize: 18),
+                                    ),
+                                  ],
                                 ),
                               ),
                               const SizedBox(
-                                height: 5,
+                                height: 10,
                               ),
                               Text(
-                                favProductsList[index].title ?? "",
+                                productsList.where((e) => e.isFavorite == true).toList()[index].title ?? "",
                                 textAlign: TextAlign.center,
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
-                                style: TextStyle(color: APPCOLOR.BlACKCOLOR, fontSize: 14, fontWeight: FontWeight.w600),
+                                style: const TextStyle(color: Colors.blue, fontSize: 14, fontWeight: FontWeight.w600),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(left: 10, right: 10, top: 5, bottom: 5),
-                                child: ElevatedButton(
-                                    onPressed: () {},
-                                    style: ButtonStyle(
-                                      shape: WidgetStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(0),
-                                      )),
-                                      backgroundColor: WidgetStatePropertyAll(APPCOLOR.GREEN),
-                                    ),
-                                    child: const Center(
-                                      child: Text(
-                                        "Add to cart",
-                                        style: TextStyle(color: Colors.white),
+                                  padding: const EdgeInsets.only(left: 0, right: 0, top: 5, bottom: 5),
+                                  child: Row(
+                                    children: [
+                                      InkWell(
+                                        onTap: () {
+                                          removeFav(index);
+                                        },
+                                        child: Icon(
+                                          Icons.favorite,
+                                          color: APPCOLOR.RED,
+                                          size: 30,
+                                        ),
                                       ),
-                                    )),
-                              )
+                                      const SizedBox(
+                                        width: 5,
+                                      ),
+                                      SizedBox(
+                                          width: 70,
+                                          child: Text(
+                                            AppString.savedLater,
+                                            style: TextStyle(color: APPCOLOR.RED, fontSize: 12),
+                                          ))
+                                    ],
+                                  )),
+                              Padding(
+                                  padding: const EdgeInsets.only(left: 0, right: 0, top: 5, bottom: 5),
+                                  child: ElevatedButton(
+                                      onPressed: () {
+                                        if (productsList.where((e) => e.isFavorite == true).toList()[index].isCart) {
+                                          return;
+                                        }
+                                        addCartButton(index);
+                                      },
+                                      style: ButtonStyle(
+                                        shape: WidgetStateProperty.all<RoundedRectangleBorder>(RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(0),
+                                        )),
+                                        backgroundColor: WidgetStatePropertyAll(APPCOLOR.GREEN),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          productsList.where((e) => e.isFavorite == true).toList()[index].isCart ? AppString.viewCart : AppString.addCart,
+                                          style: const TextStyle(color: Colors.white),
+                                        ),
+                                      ))),
                             ],
                           ),
                         ),
-                      ),
-                      Positioned(
-                          right: 10,
-                          top: 10,
-                          child: InkWell(
-                            onTap: () {
-                              removeFav(index);
-                            },
-                            child: Icon(
-                              Icons.favorite,
-                              color: APPCOLOR.RED,
-                            ),
-                          )),
-                    ],
-                  );
-                })
-            : EmptyWidget(message: "No Data Available"));
+                      );
+                    }),
+              )
+            : EmptyWidget(message: AppString.noData));
   }
 
   @override
@@ -101,7 +135,13 @@ class _ProductScreenState extends State<FavScreen> {
   }
 
   removeFav(index) {
-    favProductsList.removeAt(index);
+    productsList.where((e) => e.isFavorite == true).toList()[index].isFavorite = false;
+    setState(() {});
+  }
+
+  addCartButton(index) {
+    productsList.where((e) => e.isFavorite == true).toList()[index].isCart = true;
+    productsList.where((e) => e.isFavorite == true).toList()[index].addedQty++;
     setState(() {});
   }
 }
